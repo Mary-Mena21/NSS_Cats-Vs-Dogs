@@ -5,8 +5,12 @@ import {
   getWinners,
 } from "./ganeshSectionDataAccess.js";
 
+//import sidebar js and scorecard js
+import { renderSidebar } from "../sidebar.js";
+//import scorecard js
+import { renderScorecard } from "../scorecard.js";
+
 const ganeshSection = document.querySelector("#ganesh__section");
-const sidebar = document.querySelector("#sidebar");
 
 const renderGaneshSectionHtml = async () => {
   const randomCat = await getRandomCat();
@@ -48,26 +52,21 @@ const renderGaneshSectionHtml = async () => {
 
 renderGaneshSectionHtml();
 
-const renderSidebar = async () => {
-  const winners = await getWinners();
-  console.log(winners);
-  const sidebarHtml = ``;
-  sidebar.innerHTML = sidebarHtml;
-};
-
-renderSidebar();
-
 ganeshSection.addEventListener("click", async (imageClicked) => {
   if (imageClicked.target.id.startsWith("ganesh__section__image__clicked__")) {
     const clickedId = imageClicked.target.id.split("__");
     const url = clickedId.pop();
     const type = clickedId.pop();
 
+    // console.log({ url: url, type: type, vote: 1 });
     await recordVote({ url: url, type: type, vote: 1 });
   }
 });
 
 ganeshSection.addEventListener("voteRecorded", (customEvent) => {
-  console.log("vote recorded");
+  // console.log("vote recorded");
   renderGaneshSectionHtml();
+  //render sidebar js during state change
+  renderSidebar();
+  renderScorecard();
 });
